@@ -1,0 +1,65 @@
+name: Build
+
+on:
+  pull_request:
+    branches:
+      - main
+
+  workflow_dispatch:
+    inputs:
+      build_configuration:
+        description: "Build Configuration"
+        required: false
+        default: "Release"
+        type: choice
+        options:
+          - Debug
+          - Release
+      log_level:
+        description: "dotnet verbosity level"
+        required: false
+        default: "normal"
+        type: choice
+        options:
+          - quiet
+          - minimal
+          - normal
+          - detailed
+
+env:
+  DOTNET_VERSION: "10.0.103"
+  BUILD_CONFIGURATION: "Release"
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Mensaje Inicial
+        run: echo "Iniciando workflow de CI"
+
+      - name: Checkout del código
+        uses: actions/checkout@v4
+
+      - name: Setup .NET
+        uses: actions/setup-dotnet@v4
+        with:
+          dotnet-version: ${{ env.DOTNET_VERSION }}
+          include-prerelease: true
+
+      - name: Ver versión instalada
+        run: dotnet --version
+
+      - name: Restore Dependencies
+        run: |
+          LOG_LEVEL=${{ inputs.log_level || 'normal' }}
+          dotnet restore src/Api/Api.csproj --verbosity $LOG_LEVEL
+
+      - name: Build
+        run: |
+          CONFIG=${{ inputs.build_configuration || env.BUILD_CONFIGURATION }}
+          echo "Building with $CONFIG"
+          dotnet build src/Api/Api.csproj --configuration $CONFIG --no-restore
+
+      - name: Mensaje Final
+        run: echo "Build finalizado"
