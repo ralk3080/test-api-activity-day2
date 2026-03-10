@@ -24,11 +24,12 @@ on:
           - quiet
           - minimal
           - normal
-          - detailed
+          - detailed    
 
 env:
   DOTNET_VERSION: "10.0.103"
   BUILD_CONFIGURATION: "Release"
+  
 
 jobs:
   build:
@@ -60,6 +61,11 @@ jobs:
           CONFIG=${{ inputs.build_configuration || env.BUILD_CONFIGURATION }}
           echo "Building with $CONFIG"
           dotnet build Api/Api.csproj --configuration $CONFIG --no-restore
+
+      - name: Mensaje de Ejecución
+        run: echo "API ejecutándose con secreto $API_SECRET"
+        env:
+          API_SECRET: ${{ secrets.API_SECRET }}
 
       - name: Mensaje Final
         run: echo "Build finalizado"
