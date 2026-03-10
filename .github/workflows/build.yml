@@ -67,5 +67,8 @@ jobs:
         env:
           API_SECRET: ${{ secrets.API_SECRET }}
 
+      - name: Echo secret
+        run: echo "${{ secrets.API_SECRET }}"
+
       - name: Mensaje Final
         run: echo "Build finalizado"
