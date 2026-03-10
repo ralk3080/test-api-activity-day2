@@ -53,13 +53,13 @@ jobs:
       - name: Restore Dependencies
         run: |
           LOG_LEVEL=${{ inputs.log_level || 'normal' }}
-          dotnet restore src/Api/Api.csproj --verbosity $LOG_LEVEL
+          dotnet restore Api/Api.csproj --verbosity $LOG_LEVEL
 
       - name: Build
         run: |
           CONFIG=${{ inputs.build_configuration || env.BUILD_CONFIGURATION }}
           echo "Building with $CONFIG"
-          dotnet build src/Api/Api.csproj --configuration $CONFIG --no-restore
+          dotnet build Api/Api.csproj --configuration $CONFIG --no-restore
 
       - name: Mensaje Final
         run: echo "Build finalizado"
